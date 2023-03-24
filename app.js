@@ -1,0 +1,18 @@
+require("dotenv").config()
+const express = require("express");
+const cors = require("cors")
+const app = express();
+const dbConnect = require("./config/mongo")
+
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json())
+
+app.use("/api", require("./routes/medicRoutes"))
+
+app.listen(PORT,() => {
+    console.log("conectado al puerto", PORT)
+})
+
+dbConnect()
