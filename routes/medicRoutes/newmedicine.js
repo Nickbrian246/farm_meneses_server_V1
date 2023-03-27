@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const {createItem} = require("../../controllers/medicControllers/medicines");
+const {validationMedicines} = require("../../validator/medicinesValidator/medicinesValidations");
 
-router.get("/",(req,res) => {
-    res.send("routeando con express")
-})
+router.post("/",validationMedicines,createItem)
 
 module.exports = router

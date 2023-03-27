@@ -10,6 +10,8 @@ app.use(cors());
 app.use(express.json())
 
 app.use("/api", require("./routes/medicRoutes"))
+app.use("/api", require("./routes/storageRoutes"))
+app.use(express.static("storage"))
 
 app.listen(PORT,() => {
     console.log("conectado al puerto", PORT)

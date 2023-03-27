@@ -16,9 +16,15 @@ const medicinesSchema = new mongoose.Schema({
     quantity:{
         type:Number
     },
-    img:{
+    function:{
         type:String
-    }
+    },
+    imgId:{
+        type:String
+    },
+    id:{
+        type:mongoose.Types.ObjectId
+    },
 },
 {
     timestamps:true,
@@ -26,4 +32,4 @@ const medicinesSchema = new mongoose.Schema({
 }
 );
 
-module.exports = mongoose.model("medicinas",medicinesSchema)
+module.exports = mongoose.model("medicines",medicinesSchema)
