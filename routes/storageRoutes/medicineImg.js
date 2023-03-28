@@ -1,9 +1,16 @@
 const express = require("express");
-const router= express.Router()
-const {createImgMedecine,getImgMedecine} = require("../../controllers/storage/storage");
-const {medicImgValidator} = require("../../validator/medicImgValidator/medicImgValidator")
+const router= express.Router();
 const {uploadMiddleware} = require("../../utils/handleStorage")
+const {
+createItem,
+deleteItem,
+getItem,
+getItems,
+updateItem} = require("../../controllers/storageControllers/medinceImgController")
 
-router.post("/",uploadMiddleware.single("myfile"),createImgMedecine);
-router.get("/:id",getImgMedecine)
+
+router.post("/",uploadMiddleware.single("myfile"),createItem);
+router.get("/:id",getItem)
+router.get("/",getItems)
+router.delete("/:id",deleteItem)
 module.exports= router

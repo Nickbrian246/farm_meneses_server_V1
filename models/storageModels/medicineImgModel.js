@@ -6,8 +6,9 @@ const MedicImgSchema = new mongoose.Schema({
     },
     fileName:{
         type:String
-    }
-},{
+    },
+},
+{
     timestamps:true,
     versionKey:false,
     
