@@ -3,7 +3,7 @@ const {matchedData}= require("express-validator");
 const {handlehttpErros} = require("../../utils/handlehttpsErrors");
 const fs = require("fs");
 
-const MEDIA_PATH= `${__dirname}/../storage`;
+const MEDIA_PATH= `${__dirname}/../../storage`;
 const PUBLIC_URL = process.env.PUBLIC_URL;
 
 
@@ -42,10 +42,9 @@ const updateItem = async(req,res) => {
 };
 const deleteItem = async(req,res) => {
     try {
-        req = matchedData(req);
-        const {id} = req;
+        const {id} = req.params;
         const datafile = await  medicineImgModels.findById(id)
-        await medicineImgModels.deleteOne(id)
+        await medicineImgModels.deleteOne({_id:id})
 
         const {fileName} = datafile;
         const filepath = `${MEDIA_PATH}/${fileName}`
@@ -64,9 +63,7 @@ const deleteItem = async(req,res) => {
 
 const createItem = async (req, res) =>{
 try {
-
 const {file }= req
-
 const fileData = {
     fileName: file.filename,
     url:`${PUBLIC_URL}/${file.filename}`
