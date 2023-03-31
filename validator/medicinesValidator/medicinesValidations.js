@@ -2,7 +2,7 @@ const {check} = require('express-validator');
 const {validateResults} = require("../../utils/handleValidator");
 
 const validationMedicines = [
-    check("name").exists().notEmpty(),
+    check("name").exists().notEmpty().isString(),
     check("compound").exists().notEmpty(),
     check("price").exists().notEmpty(),
     check("type").exists().notEmpty(),
