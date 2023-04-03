@@ -18,6 +18,7 @@ const getSaleById = async (req,res) => {
     try {
         const {id} =req.params
         const data = await saleModel.findById(id);
+        if (data === null)  return res.send({data:"elemento no encontrado o previamente eliminado"})
         res.send({data})
     } catch (error) {
         handlehttpErros(res,"error en sales ", 402)
