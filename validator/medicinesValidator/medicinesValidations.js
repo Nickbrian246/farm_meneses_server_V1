@@ -14,5 +14,13 @@ const validationMedicines = [
         return validateResults(req, res, next)
     }
 ]
+const validationGetMedicineByName = [
+    check("name").exists().notEmpty().isString(),
+    (req, res, next) =>{
+        return validateResults(req, res, next)
+    }
+]
 
-module.exports = {validationMedicines}
+module.exports = {
+    validationMedicines,
+    validationGetMedicineByName}
