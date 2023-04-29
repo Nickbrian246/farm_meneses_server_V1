@@ -26,7 +26,6 @@ const updateMedcineByName= async (req, res) =>{
         res.send({data})
 
     } catch (error) {
-        console.log(error)
         handlehttpErros(res,"error en update ALLproperties medicines de medicines", 400)
     }
 }
@@ -38,7 +37,6 @@ const deleteMedicineByName = async (req, res) =>{
         const data = await medicineModels.deleteOne({_id:id})
         res.send({data})
     } catch (error) {
-        console.log(error)
         handlehttpErros(res,"error en delete medicines de medicines", 400)
     }
 }
