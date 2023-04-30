@@ -8,8 +8,7 @@ const validationMedicines = [
     check("type").exists().notEmpty(),
     check("quantity").exists().notEmpty(),
     check("function").exists().notEmpty(),
-    check("imgId").exists().notEmpty(),
-    check("id").exists().notEmpty(),
+    check("imgId").isString(),
     (req, res, next) =>{
         return validateResults(req, res, next)
     }

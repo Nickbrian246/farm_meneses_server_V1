@@ -20,11 +20,9 @@ const medicinesSchema = new mongoose.Schema({
         type:String
     },
     imgId:{
-        type:String
-    },
-    id:{
-        type:mongoose.Types.ObjectId
-    },
+        type:String,
+        required:false
+    }
 },
 {
     timestamps:true,

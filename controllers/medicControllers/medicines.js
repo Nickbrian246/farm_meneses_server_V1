@@ -10,7 +10,7 @@ const createItem=  async( req, res) => {
         res.send({data})
     } catch (error) {
         console.log(error)
-        handlehttpErros(res,"error en create Item de medicines", 400)
+        handlehttpErros(res,`error de ${error}`, 400)
     }
 };
 const getMedicines = async (req, res) =>{
