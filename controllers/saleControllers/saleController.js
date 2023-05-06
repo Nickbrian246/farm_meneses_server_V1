@@ -6,6 +6,7 @@ const  {handlehttpErros} = require("../../utils/handlehttpsErrors")
 const createSale = async (req,res) => {
     try {
         const body = req.body
+        console.log(body)
         const data = await saleModel.create(body);
         
         res.send({data})

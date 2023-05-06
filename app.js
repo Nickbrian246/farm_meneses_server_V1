@@ -12,7 +12,8 @@ app.use(express.json())
 app.use("/api", require("./routes/medicRoutes"))
 app.use("/api", require("./routes/storageRoutes"))
 app.use("/api", require("./routes/salesRoutes"))
-app.use("/api", require("./routes/whiteProductsRoutes"))
+app.use("/api", require("./routes/drinksRoutes"))
+app.use("/api", require("./routes/listCartRoutes"))
 app.use(express.static("storage"))
 
 app.listen(PORT,() => {

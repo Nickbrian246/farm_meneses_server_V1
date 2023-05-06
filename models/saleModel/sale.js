@@ -5,15 +5,12 @@ const saleByIndividualProductSchema = new mongoose.Schema(
     name:{
     type:String,
     },
-    precio:{
+    price:{
         type:Number,
     },
-    cantidad:{
+    amount:{
         type:Number
     },
-    id:{
-    type:mongoose.Types.ObjectId
-    }
 },
 {
     versionKey:false
@@ -22,10 +19,11 @@ const saleByIndividualProductSchema = new mongoose.Schema(
 const saleSchema = new mongoose.Schema(
 {
     products: [{type:saleByIndividualProductSchema , required:true}],
-    id:{type:mongoose.Types.ObjectId},
     clientId:{type:mongoose.Types.ObjectId, required:false},
     date: { type:String},
-    total:{ type:Number}
+    total:{ type:Number},
+    cashReceived:{type:Number},
+    changeGiven:{type:Number}
 },
 {
 timestamps:true,

@@ -5,8 +5,9 @@ const {
     deleteItem,
     getItem,
     getItems,
-    updateItem
-} = require("../../controllers/whiteProductsController/whiteProducts")
+    updateItem,
+    getDrinksByName,
+} = require("../../controllers/drinksController/drinksController")
 
 router.post("/",createItem);
 router.get("/",getItems);

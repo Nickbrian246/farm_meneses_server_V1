@@ -1,9 +1,8 @@
 const mongoose =  require("mongoose");
 
-const WhiteProductsSchema = new mongoose.Schema({
+const DrinksSchema = new mongoose.Schema({
     name:{type:String},
     price:{type:Number},
-    id:{type:mongoose.Types.ObjectId , required: false},
     quantity:{type:Number},
     type:{type:String},
     brand:{type:String, required:false},
@@ -15,4 +14,4 @@ const WhiteProductsSchema = new mongoose.Schema({
     versionKey:false
 })
 
-module.exports = mongoose.model("whiteProducst", WhiteProductsSchema)
+module.exports = mongoose.model("drinksModel", DrinksSchema)
