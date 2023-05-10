@@ -15,6 +15,9 @@ app.use("/api", require("./routes/salesRoutes"))
 app.use("/api", require("./routes/drinksRoutes"))
 app.use("/api", require("./routes/listCartRoutes"))
 app.use(express.static("storage"))
+// V2
+app.use("/apiV2",require("./routes-V2/inputDynamicSearchByName"))
+app.use("/apiV2", require("./routes-V2/productsV2"))
 
 app.listen(PORT,() => {
     console.log("conectado al puerto", PORT)
