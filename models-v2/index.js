@@ -1,7 +1,8 @@
 
 
 const modelsV2= {
-  productModelV2:require("./products/productsSchema"),
+  productStock:require("./products/productsSchema"),
+  Users: require("./usersSchema/userSchema")
 }
 
 module.exports= modelsV2

@@ -7,7 +7,7 @@ const ProductV2Validation= [
   check("quantity").isNumeric().notEmpty().exists(),
   check("compound").isString().optional(),
   check("tag").isString().exists().notEmpty(),
-  check("whatIsFor").isString().optional(),
+  check("whatIsItFor").isString().optional(),
   check("size").isString().optional(),
   check("brand").isString().optional(),
   check("pieces").isNumeric().optional().notEmpty().exists(),

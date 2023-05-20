@@ -1,11 +1,11 @@
 const express= require("express")
 const router = express.Router()
-const {productModelV2}= require("../../models-v2")
+const {productStock}= require("../../models-v2")
 
 const getProductByName= async (req,res) => {
   try {
     const {name} = req.params
-    const data= (await productModelV2.find({})).filter((item) => {
+    const data= (await productStock.find({})).filter((item) => {
       return item.name.includes(name)
     })
     res.send({data})

@@ -1,11 +1,11 @@
-const {productModelV2} = require("../../models-v2")
+const {productStock} = require("../../models-v2")
 const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 
 const getProduct= async(req,res) => {
   try {
-    const {id}= req
-    const data=  await productModelV2.findById(id)
+    const {id}= req.params
+    const data=  await productStock.findById(id)
     res.send({data})
     
   } catch (error) {
@@ -14,7 +14,7 @@ const getProduct= async(req,res) => {
 }
 const getProducts= async(req,res) => {
   try {
-    const data= await productModelV2.find({})
+    const data= await productStock.find({})
     res.send({data})
   } catch (error) {
     
@@ -23,7 +23,7 @@ const getProducts= async(req,res) => {
 const createProduct= async(req,res) => {
   try {
     const {body}= req
-    const data= await productModelV2.create(body)
+    const data= await productStock.create(body)
     res.send({data})
   } catch (error) {
     handlehttpErros(res,`error en getproduct ${error}`,400)
@@ -33,7 +33,7 @@ const updateProduct= async(req,res) => {
   try {
     const {id}= req.params;
     const{body} = req;
-    const data= await productModelV2.findByIdAndUpdate(id,body)
+    const data= await productStock.findByIdAndUpdate(id,body)
     res.send({data})
   } catch (error) {
     handlehttpErros(res,`error en getproduct ${error}`,400)
@@ -42,7 +42,7 @@ const updateProduct= async(req,res) => {
 const deleteProduct= async(req,res) => {
   try {
     const {id}= req.params
-    const data= await productModelV2.deleteOne({_id:id})
+    const data= await productStock.deleteOne({_id:id})
     res.send({data})
   } catch (error) {
     handlehttpErros(res,`error en getproduct ${error}`,400)

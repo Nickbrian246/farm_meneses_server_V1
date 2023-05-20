@@ -32,6 +32,10 @@ const ProductSchemaV2= new mongoose.Schema(
     },
     pieces:{
       type:Number
+    },
+    clientId:{
+      type:String,
+      required:true
     }
 
 
@@ -42,4 +46,18 @@ const ProductSchemaV2= new mongoose.Schema(
 }
 )
 
-module.exports = mongoose.model("productSchemaV2", ProductSchemaV2)
+const productStock= new mongoose.Schema(
+  { 
+    clientId:{
+      type: String,
+      unique:true
+    },
+    productsInStock: [ {type: ProductSchemaV2}]
+  },
+  {
+    timestamps:true,
+    versionKey:false
+  }
+)
+
+module.exports = mongoose.model("productStock", productStock)

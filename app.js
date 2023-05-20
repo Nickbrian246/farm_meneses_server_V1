@@ -18,6 +18,7 @@ app.use(express.static("storage"))
 // V2
 app.use("/apiV2",require("./routes-V2/inputDynamicSearchByName"))
 app.use("/apiV2", require("./routes-V2/productsV2"))
+app.use("/apiV2", require("./routes-V2/auth"))
 
 app.listen(PORT,() => {
     console.log("conectado al puerto", PORT)
