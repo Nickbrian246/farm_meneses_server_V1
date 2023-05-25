@@ -2,48 +2,74 @@ const {Sales} = require("../../models-v2")
 const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 // format day/month/year
+// esto es para crear 
 const today = new Date();
-const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
-console.log(formattedDate)// 20/5/2023
+const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+console.log(formattedDate)// 2023/5/20
 
-const getProduct= async(req,res) => {
-  try {
-    const {id}= req.params
-    const data=  await Sales.findById(id)
-    res.send({data})
-    
-  } catch (error) {
-    handlehttpErros(res,`error en getproduct ${error}`,400)
-  }
-}
-const getProducts= async(req,res) => {
-  try {
-    const data= await Sales.find({})
-    res.send({data})
-  } catch (error) {
-    
-  }
-}
-const createProduct= async(req,res) => {
+// este controlador
+// se encarga de buscar un schema existente 
+// para la fecha de no encontrarlo crea uno nuevo 
+// con el parametro de fecha actual y clientID 
+const createSale= async(req,res) => {
   try {
     const {body}= req
+    const {clientId}= body
+    const findIt= await Sales.findOne({clientId,date:formattedDate}) // busca con forme a fecha y clientID
+    if (!findIt) { // si no lo encuentra crea uno nuevo con la fecha de hoy y con el id del cliente
+      const newSaleModel= await Sales.create(body)
+      res.send({data:newSaleModel})
+      return 
+    }
     const data= await Sales.create(body)
     res.send({data})
   } catch (error) {
     handlehttpErros(res,`error en getproduct ${error}`,400)
   }
 }
-const updateProduct= async(req,res) => {
+const getSale= async(req,res) => {
   try {
-    const {id}= req.params;
-    const{body} = req;
-    const data= await Sales.findByIdAndUpdate(id,body)
+    const {client,date}= req.body
+    const data=  await Sales.find({date, client})
     res.send({data})
+    
   } catch (error) {
-    handlehttpErros(res,`error en getproduct ${error}`,400)
+    handlehttpErros(res,`error en getSale ${error}`,400)
   }
 }
-const deleteProduct= async(req,res) => {
+const getSales= async(req,res) => {
+  try {
+    const {client}= req.body
+    const data= await Sales.find({client})
+    res.send({data})
+  } catch (error) {
+    
+  }
+}
+const updateOrCreateSale= async(req,res) => {
+  try {
+    const {body}=req
+    const {date,client}=body
+
+    const updated = await Sales.findOneAndUpdate(
+      { client,date},
+      { $push: { salesOfTheDay: { $each: body.salesOfTheDay } } },
+      { new: true }
+    );
+    if(updated===null){
+      const create= await Sales.create(body)
+      console.log(create)
+      res.send({data:create})
+      return 
+    }
+    res.send({ data: updated });
+
+  } catch (error) {
+    handlehttpErros(res, `Error en getproduct ${error}`, 400);
+  }
+}
+ 
+const deleteSale= async(req,res) => {
   try {
     const {id}= req.params
     const data= await Sales.deleteOne({_id:id})
@@ -53,10 +79,9 @@ const deleteProduct= async(req,res) => {
   }
 }
 module.exports= {
-  createProduct,
-  deleteProduct,
-  getProduct,
-  getProducts,
-  updateProduct,
-
+createSale,
+deleteSale,
+getSale,
+getSales,
+updateOrCreateSale
 }

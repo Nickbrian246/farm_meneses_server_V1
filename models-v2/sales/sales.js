@@ -32,18 +32,18 @@ const SaleProductSchema= new mongoose.Schema(
   versionKey:false
 }
 )
-
+const today = new Date();
+const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
 const dailySales= new mongoose.Schema(
   { 
-    clientId:{
+    client:{
       type: String,
-      unique:true
     },
     date:{
-      type:Date,
-      default:Date.now
+      type:String,
+      default:formattedDate
     },
-    productsInStock: [ {type: SaleProductSchema}]
+    salesOfTheDay: [ {type: SaleProductSchema}]
   },
   {
     timestamps:true,

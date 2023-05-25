@@ -12,28 +12,17 @@ const getProduct= async(req,res) => {
     handlehttpErros(res,`error en getproduct ${error}`,400)
   }
 }
-const getProducts= async(req,res) => {
+const updateOrCreateProduct= async(req,res) => {
   try {
-    const data= await productStock.find({})
-    res.send({data})
-  } catch (error) {
     
-  }
-}
-const createProduct= async(req,res) => {
-  try {
-    const {body}= req
-    const data= await productStock.create(body)
-    res.send({data})
-  } catch (error) {
-    handlehttpErros(res,`error en getproduct ${error}`,400)
-  }
-}
-const updateProduct= async(req,res) => {
-  try {
-    const {id}= req.params;
     const{body} = req;
-    const data= await productStock.findByIdAndUpdate(id,body)
+    const {client}= body
+    console.log(client);
+    const data= await productStock.findOneAndUpdate(
+      {client:client},
+      { $push: { salesOfTheDay: { $each: body.salesOfTheDay } } },
+      { new: true,upsert: true  }
+    )
     res.send({data})
   } catch (error) {
     handlehttpErros(res,`error en getproduct ${error}`,400)
@@ -49,10 +38,8 @@ const deleteProduct= async(req,res) => {
   }
 }
 module.exports= {
-  createProduct,
+  updateOrCreateProduct,
   deleteProduct,
   getProduct,
-  getProducts,
-  updateProduct,
 
 }

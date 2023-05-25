@@ -1,17 +1,19 @@
 const express= require("express")
 const router= express.Router()
 const {
-createProduct,
-deleteProduct,
-getProduct,
-getProducts,
-updateProduct,}= require("../../controllers-V2/salesController/saleController")
+createSale,
+deleteSale,
+getSale,
+getSales,
+updateOrCreateSale}= require("../../controllers-V2/salesController/saleController")
 
 
-router.get("/",getProducts)
-router.get("/:id",getProduct)
-router.post("/",createProduct)
-router.put("/:id",updateProduct)
-router.delete("/:id",deleteProduct)
+router.get("/",getSales)
+// esta ruta se encargara de obtener la ruta en base a la fecha
+router.get("/",getSale)
+router.post("/",createSale)
+// put se encargara de buscar y en caso de no entrar crear un nuevo modelo de venta para la fecha de dia presente
+router.put("/",updateOrCreateSale)
+router.delete("/:id",deleteSale)
 
 module.exports= router

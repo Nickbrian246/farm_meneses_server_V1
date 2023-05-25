@@ -33,12 +33,6 @@ const ProductSchemaV2= new mongoose.Schema(
     pieces:{
       type:Number
     },
-    clientId:{
-      type:String,
-      required:true
-    }
-
-
   },
 {
   timestamps:true,
@@ -48,9 +42,8 @@ const ProductSchemaV2= new mongoose.Schema(
 
 const productStock= new mongoose.Schema(
   { 
-    clientId:{
+    client:{
       type: String,
-      unique:true
     },
     productsInStock: [ {type: ProductSchemaV2}]
   },

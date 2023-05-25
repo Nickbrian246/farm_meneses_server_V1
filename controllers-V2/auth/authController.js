@@ -9,6 +9,7 @@ const {tokenSign} = require("../../utils/handleJwt")
 const registerUser= async (req, res)=> {
   try {
     const body= matchedData(req)
+   
     const passwordEncrypted= await encrypt(body.password)
     const createUser= {...body, password:passwordEncrypted}
     const dataUser= await Users.create(createUser)
@@ -28,7 +29,7 @@ const registerUser= async (req, res)=> {
 const loginUser= async (req, res)=> {
   try {
     const body= matchedData(req)
-  
+    console.log(body,"soy body");
     const user = await Users.findOne({email:body.email})
     const hashPassword= user.password
     const check= await compare(body.password, hashPassword)
@@ -41,7 +42,7 @@ const loginUser= async (req, res)=> {
       token: await tokenSign(user),
       user
     }
-
+    console.log(data)
     res.send({data})
   } catch (error) {
     if(error.code===11000) {
