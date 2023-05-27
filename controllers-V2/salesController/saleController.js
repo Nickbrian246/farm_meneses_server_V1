@@ -1,4 +1,4 @@
-const {Sales} = require("../../models-v2")
+const {Sales,productStock} = require("../../models-v2")
 const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 // format day/month/year
@@ -51,14 +51,42 @@ const updateOrCreateSale= async(req,res) => {
     const {body}=req
     const {date,client}=body
 
+    const find = await productStock.findOne( { client } )
+
+
+    const clientStock= find.productsInStock
+    const sales= body.salesOfTheDay
+
+    const updatedStock = clientStock.map((itemStock) => {
+      const foundItem = sales.find((itemSale) => itemSale.name === itemStock.name);
+      if (foundItem) {
+        const updatedQuantity = itemStock.quantity - foundItem.quantity;
+        if(updatedQuantity< 0) {
+          return res
+          .status(400)
+          .json({ 
+            error:`no se pueden realizar la venta debido a que no se cuentan con suficientes articulos en stock del producto ${foundItem.name}`
+          });
+        }
+        return {
+          ...itemStock,
+          quantity: updatedQuantity >= 0 ? updatedQuantity : 0
+        };
+      } else {
+        return itemStock;
+      }
+    });
+    find.productsInStock= updatedStock
+    const updatedProductStock= await find.save()
+
     const updated = await Sales.findOneAndUpdate(
       { client,date},
       { $push: { salesOfTheDay: { $each: body.salesOfTheDay } } },
       { new: true }
     );
+    
     if(updated===null){
       const create= await Sales.create(body)
-      console.log(create)
       res.send({data:create})
       return 
     }
@@ -68,7 +96,7 @@ const updateOrCreateSale= async(req,res) => {
     handlehttpErros(res, `Error en getproduct ${error}`, 400);
   }
 }
- 
+
 const deleteSale= async(req,res) => {
   try {
     const {id}= req.params
