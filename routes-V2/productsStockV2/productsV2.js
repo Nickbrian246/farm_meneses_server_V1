@@ -7,11 +7,11 @@ const {
   getProduct,
   updateOrCreateProduct
 
-} = require("../../controllers-V2/producStockV2/productStockControllerV2")
+} = require("../../controllers-V2/productStockV2/productStockV2")
 
 
-router.get("/:id",validationById,getProduct)
+router.get("/",getProduct)
 router.put("/",updateOrCreateProduct)
-router.delete("/:id",deleteProduct)
+router.delete("/",deleteProduct)
 
 module.exports= router

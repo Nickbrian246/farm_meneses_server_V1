@@ -4,8 +4,8 @@ const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 const getProduct= async(req,res) => {
   try {
-    const {id}= req.params
-    const data=  await productStock.findById(id)
+    const {client}= req.body
+    const data=  await productStock.findOne({client})
     res.send({data})
     
   } catch (error) {
@@ -18,28 +18,28 @@ const updateOrCreateProduct= async(req,res) => {
     const{body} = req;
     const {client}= body
     console.log(client);
+    // await productStock.collection.dropIndex('clientId_1');
     const data= await productStock.findOneAndUpdate(
       {client:client},
-      { $push: { salesOfTheDay: { $each: body.salesOfTheDay } } },
-      { new: true,upsert: true  }
+      { $push: { productsInStock: { $each: body.productsInStock } } },
+      { new: true, upsert: true }
     )
     res.send({data})
   } catch (error) {
-    handlehttpErros(res,`error en getproduct ${error}`,400)
+    handlehttpErros(res,`error en updateOrCreateProduct ${error}`,400)
   }
 }
 const deleteProduct= async(req,res) => {
   try {
-    const {id}= req.params
-    const data= await productStock.deleteOne({_id:id})
+    const {client}= req.body
+    const data= await productStock.deleteOne({client})
     res.send({data})
   } catch (error) {
-    handlehttpErros(res,`error en getproduct ${error}`,400)
+    handlehttpErros(res,`error en delete Product ${error}`,400)
   }
 }
 module.exports= {
   updateOrCreateProduct,
   deleteProduct,
   getProduct,
-
 }
