@@ -6,10 +6,14 @@ const getStockItem= async(req,res) => {
     // const {client}= req.body
     // console.log(req.user._id)
     const client=req.user._id
-    const data=  await productStock.findOne({client:client})
+    const {name,_id}=  req.body
+    const findClient=  await productStock.findOne({client:client})
 
+    const stockProduct= findClient.productsInStock
+    const data = stockProduct.filter((item)=> {
+      return item.name===name
+    })
     res.send({data})
-    
   } catch (error) {
     handlehttpErros(res,`error en obtener producto ${error}`,400)
   }
