@@ -3,8 +3,11 @@ const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 const getStockItem= async(req,res) => {
   try {
-    const {client}= req.body
-    const data=  await productStock.findOne({client})
+    // const {client}= req.body
+    // console.log(req.user._id)
+    const client=req.user._id
+    const data=  await productStock.findOne({client:client})
+
     res.send({data})
     
   } catch (error) {
@@ -13,7 +16,8 @@ const getStockItem= async(req,res) => {
 }
 const modifyItemInStock= async(req,res) => {
   try {
-    const { client, modifyItem } = req.body;
+    const {  modifyItem } = req.body;
+    const client=req.user._id
     const foundProductStock = await productStock.findOne({ client });
 
     if (!foundProductStock) {
@@ -37,10 +41,8 @@ const modifyItemInStock= async(req,res) => {
 }
 const deleteStockItem= async(req,res) => {
   try {
-    const {
-      client,
-      elementToBeDelete,
-    }= req.body
+    const {elementToBeDelete}= req.body
+    const client=req.user._id
     const foundProductStock= await productStock.findOne({client})
 
     if(!foundProductStock){

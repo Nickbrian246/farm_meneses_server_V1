@@ -7,12 +7,12 @@ try {
   const checkValueRole= rol.some((rolSingle)=> roleByUser.includes(rolSingle))
   if(!checkValueRole){
     handlehttpErros(res,"no permission",403)
+  } else {
+    next()
   }
-
-  next()
 } catch (error) {
-  handlehttpErros(res,"error permission", 403)
+  handlehttpErros(res,"error permission", 404)
 }
 }
 
-module.exports= checkRol
+module.exports= {checkRol}

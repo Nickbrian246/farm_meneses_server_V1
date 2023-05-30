@@ -4,7 +4,8 @@ const {productStock}= require("../../models-v2")
 
 const getProductByName= async (req,res) => {
   try {
-    const {client, productName} = req.body
+    const {productName} = req.body
+    const client = req.user._id
 
     const find = await productStock.findOne({client})
     const clientStock= find.productsInStock

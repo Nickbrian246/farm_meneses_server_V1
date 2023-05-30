@@ -14,7 +14,7 @@ console.log(formattedDate)// 2023/5/20
 const createSale= async(req,res) => {
   try {
     const {body}= req
-    const {clientId}= body
+    const client=req.user._id
     const findIt= await Sales.findOne({clientId,date:formattedDate}) // busca con forme a fecha y clientID
     if (!findIt) { // si no lo encuentra crea uno nuevo con la fecha de hoy y con el id del cliente
       const newSaleModel= await Sales.create(body)
@@ -29,7 +29,8 @@ const createSale= async(req,res) => {
 }
 const getSale= async(req,res) => {
   try {
-    const {client,date}= req.body
+    const {date}= req.body
+    const client=req.user._id
     const data=  await Sales.find({date, client})
     res.send({data})
     
@@ -46,10 +47,16 @@ const getSales= async(req,res) => {
     
   }
 }
+/**
+ * al memento de crear una venta o hacer una venta
+ * la funcion updateOrCreate tambien va a 
+ * restar en el stock los elmentos vendidos 
+ */
 const updateOrCreateSale= async(req,res) => {
   try {
     const {body}=req
-    const {date,client}=body
+    const {date}=body
+    const client=req.user._id
 
     const find = await productStock.findOne( { client } )
 
@@ -99,8 +106,8 @@ const updateOrCreateSale= async(req,res) => {
 
 const deleteSale= async(req,res) => {
   try {
-    const {id}= req.params
-    const data= await Sales.deleteOne({_id:id})
+    const client=req.user._id
+    const data= await Sales.deleteOne({_id:client})
     res.send({data})
   } catch (error) {
     handlehttpErros(res,`error en getproduct ${error}`,400)

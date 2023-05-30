@@ -1,5 +1,6 @@
 const {handlehttpErros}= require("../utils/handlehttpsErrors")
 const {verifySign} = require("../utils/handleJwt")
+const {Users} = require("../models-v2")
 // este middleware revisara si la persona que desea consumir nuestro endpoint 
 // esta logeado por nosotros 
 //lo puedo usar en cualquer ruta 
@@ -15,9 +16,11 @@ const authMiddleware= async(req, res, next)=> {
     if(!dataToken._id){
       handlehttpErros(res,"error id token", 401)
     }
+    const user = await Users.findOne({_id:dataToken._id})
+    req.user= user
     next()
   } catch (error) {
     handlehttpErros(res,"noy session", 401)
   }
 }
-module.exports= authMiddleware
+module.exports= {authMiddleware}

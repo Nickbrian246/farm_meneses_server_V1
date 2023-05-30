@@ -4,7 +4,7 @@ const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 const getProduct= async(req,res) => {
   try {
-    const {client}= req.body
+    const client= req.user._id
     const data=  await productStock.findOne({client})
     res.send({data})
     
@@ -14,24 +14,22 @@ const getProduct= async(req,res) => {
 }
 const updateOrCreateProduct= async(req,res) => {
   try {
-    
     const{body} = req;
-    const {client}= body
-    console.log(client);
+    const client=req.user._id
     // await productStock.collection.dropIndex('clientId_1');
     const data= await productStock.findOneAndUpdate(
       {client:client},
       { $push: { productsInStock: { $each: body.productsInStock } } },
       { new: true, upsert: true }
     )
-    res.send({data})
+    res.send({data:data})
   } catch (error) {
     handlehttpErros(res,`error en updateOrCreateProduct ${error}`,400)
   }
 }
 const deleteProduct= async(req,res) => {
   try {
-    const {client}= req.body
+    const client= req.user._id
     const data= await productStock.deleteOne({client})
     res.send({data})
   } catch (error) {
