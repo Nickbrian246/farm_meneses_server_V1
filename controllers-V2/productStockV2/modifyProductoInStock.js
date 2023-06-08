@@ -3,19 +3,20 @@ const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 const getStockItem= async(req,res) => {
   try {
-    // const {client}= req.body
-    // console.log(req.user._id)
-    const client=req.user._id
-    const {name,_id}=  req.body
-    const findClient=  await productStock.findOne({client:client})
+    const client = req.user._id;
+    const { id } = req.params;
 
-    const stockProduct= findClient.productsInStock
-    const data = stockProduct.filter((item)=> {
-      return item.name===name
-    })
-    res.send({data})
+    const stockProduct = (await productStock.findOne({ client })).productsInStock;
+
+    const data = stockProduct.find((item) => String(item._id) === id);
+
+    if (data) {
+      res.send({ data });
+    } else {
+      handlehttpErros(res, `No se encontró ningún producto con el ID ${id}`, 404);
+    }
   } catch (error) {
-    handlehttpErros(res,`error en obtener producto ${error}`,400)
+    handlehttpErros(res, `Error al obtener el producto: ${error}`, 400);
   }
 }
 const modifyItemInStock= async(req,res) => {
@@ -27,9 +28,9 @@ const modifyItemInStock= async(req,res) => {
     if (!foundProductStock) {
       return res.status(404).json({ error: 'producto no encontrado' });
     }
-
+    console.log(foundProductStock.productsInStock)
     const modifiedProducts = foundProductStock.productsInStock.map((item) => {
-      if (item.name === modifyItem.name) {
+      if (String(item._id) === modifyItem.id) {
         return { ...item, ...modifyItem };
       }
       return item;
@@ -45,22 +46,21 @@ const modifyItemInStock= async(req,res) => {
 }
 const deleteStockItem= async(req,res) => {
   try {
-    const {elementToBeDelete}= req.body
+    const {id}= req.params
     const client=req.user._id
     const foundProductStock= await productStock.findOne({client})
-
     if(!foundProductStock){
-      res.status(404).json({error:"producto no encontrado"})
+      res.status(404).json({error:"no se encontro el stock del cliente comuniquese con soporte al cliente"})
     }
 
     const deletingItem= foundProductStock.productsInStock.filter((item)=>{
-      return item.name!==elementToBeDelete.name
+      return String(item._id) !==id
     })
   
     foundProductStock.productsInStock= deletingItem;
     const updatedProductStock= await foundProductStock.save()
 
-    res.send({data:updatedProductStock})
+    res.send({data:"producto eliminado con exito"})
   } catch (error) {
     handlehttpErros(res,`error en delete Product ${error}`,400)
   }

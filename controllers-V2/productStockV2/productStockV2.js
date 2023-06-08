@@ -15,6 +15,7 @@ const getProduct= async(req,res) => {
 const updateOrCreateProduct= async(req,res) => {
   try {
     const{body} = req;
+    console.log(body)
     const client=req.user._id
     // await productStock.collection.dropIndex('clientId_1');
     const data= await productStock.findOneAndUpdate(

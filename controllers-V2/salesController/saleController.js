@@ -15,7 +15,7 @@ const createSale= async(req,res) => {
   try {
     const {body}= req
     const client=req.user._id
-    const findIt= await Sales.findOne({clientId,date:formattedDate}) // busca con forme a fecha y clientID
+    const findIt= await Sales.findOne({client,date:formattedDate}) // busca con forme a fecha y clientID
     if (!findIt) { // si no lo encuentra crea uno nuevo con la fecha de hoy y con el id del cliente
       const newSaleModel= await Sales.create(body)
       res.send({data:newSaleModel})
@@ -29,9 +29,12 @@ const createSale= async(req,res) => {
 }
 const getSale= async(req,res) => {
   try {
-    const {date}= req.body
+    const {date}= req.params
+    console.log(date)
     const client=req.user._id
+    console.log(client) 
     const data=  await Sales.find({date, client})
+    console.log(data)
     res.send({data})
     
   } catch (error) {
@@ -59,6 +62,7 @@ const updateOrCreateSale= async(req,res) => {
     const client=req.user._id
 
     const find = await productStock.findOne( { client } )
+    console.log(find)
 
 
     const clientStock= find.productsInStock
@@ -93,7 +97,10 @@ const updateOrCreateSale= async(req,res) => {
     );
     
     if(updated===null){
-      const create= await Sales.create(body)
+      const adaptingClientToString= String(client)
+      const addingClient= {...body,client:adaptingClientToString}
+      console.log(addingClient)
+      const create= await Sales.create(addingClient)
       res.send({data:create})
       return 
     }

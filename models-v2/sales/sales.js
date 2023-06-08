@@ -9,22 +9,14 @@ const SaleProductSchema= new mongoose.Schema(
     price:{
       type:Number
     },
-    tag:{
-      type:String
-    },
-    whatIsItFor:{
-      type:String,
-      required:false
-    },
-    size:{
-      type:String
-    },
-    brand:{
-      type:String,
-      required:false
-    },
-    pieces:{
+    quantity:{
       type:Number
+    },
+    total:{
+      type:String
+    },
+    id:{
+      type:String
     },
   },
 {
@@ -33,11 +25,11 @@ const SaleProductSchema= new mongoose.Schema(
 }
 )
 const today = new Date();
-const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 const dailySales= new mongoose.Schema(
   { 
     client:{
-      type: String,
+      type:String
     },
     date:{
       type:String,

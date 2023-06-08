@@ -15,8 +15,8 @@ modifyItemInStock
  * es decir un patch
  */
 
-router.get("/",authMiddleware,checkRol(["admin","master"]),getStockItem)
+router.get("/:id",authMiddleware,checkRol(["admin","master"]),getStockItem)
 router.put("/",authMiddleware,checkRol(["admin","master"]),modifyItemInStock)
-router.delete("/",authMiddleware,checkRol(["admin","master"]),deleteStockItem)
+router.delete("/:id",authMiddleware,checkRol(["admin","master"]),deleteStockItem)
 
 module.exports= router
