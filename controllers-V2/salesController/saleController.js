@@ -62,20 +62,24 @@ const updateOrCreateSale= async(req,res) => {
     const client=req.user._id
 
     const find = await productStock.findOne( { client } )
-    console.log(find)
+    console.log(body)
 
 
     const clientStock= find.productsInStock
     const sales= body.salesOfTheDay
-
+    let error = false
+    /**
+     *actualiza el stock en funcion de la lista de productos que recibe
+    */
     const updatedStock = clientStock.map((itemStock) => {
       const foundItem = sales.find((itemSale) => itemSale.name === itemStock.name);
       if (foundItem) {
         const updatedQuantity = itemStock.quantity - foundItem.quantity;
         if(updatedQuantity< 0) {
+          error = true
           return res
           .status(400)
-          .json({ 
+          .send({ 
             error:`no se pueden realizar la venta debido a que no se cuentan con suficientes articulos en stock del producto ${foundItem.name}`
           });
         }
@@ -87,23 +91,38 @@ const updateOrCreateSale= async(req,res) => {
         return itemStock;
       }
     });
+    if(error){
+      return;
+    }
     find.productsInStock= updatedStock
-    const updatedProductStock= await find.save()
-
+    const updatedProductStock= await find.save()// guarda esos cambias en es modelo 
+  /**
+   * updated si existe ya un registro de ventas para el dia de hoy 
+   * lo actualiza metiendo los nuevos productos vendidos 
+   * no limpia repetidos 
+   */
     const updated = await Sales.findOneAndUpdate(
       { client,date},
       { $push: { salesOfTheDay: { $each: body.salesOfTheDay } } },
       { new: true }
     );
-    
+      /**
+       * si no existe un registro para la fecha proporcionada 
+       * crea uno nuevo 
+       */
     if(updated===null){
       const adaptingClientToString= String(client)
       const addingClient= {...body,client:adaptingClientToString}
-      console.log(addingClient)
+
       const create= await Sales.create(addingClient)
+      console.log(create)
       res.send({data:create})
       return 
     }
+
+    /**
+     * si updated existe entonces envia el updated actualizado como respuesta 
+     */
     res.send({ data: updated });
 
   } catch (error) {
