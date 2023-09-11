@@ -1,10 +1,14 @@
+const { body } = require("express-validator");
 const {Sales,productStock} = require("../../models-v2")
 const {handlehttpErros} = require("../../utils/handlehttpsErrors")
 
 // format day/month/year
 // esto es para crear 
 const today = new Date();
-const formattedDate = `${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`;
+const year = today.getFullYear();
+const month = String(today.getMonth() + 1).padStart(2, '0');
+const day = String(today.getDate()).padStart(2, '0');
+const formattedDate = `${year}/${month}/${day}`;
 console.log(formattedDate)// 2023/5/20
 
 // este controlador
@@ -15,9 +19,12 @@ const createSale= async(req,res) => {
   try {
     const {body}= req
     const client=req.user._id
+    console.log(body,`soy cliente desde la creacin de la venta`,client);
     const findIt= await Sales.findOne({client,date:formattedDate}) // busca con forme a fecha y clientID
-    if (!findIt) { // si no lo encuentra crea uno nuevo con la fecha de hoy y con el id del cliente
-      const newSaleModel= await Sales.create(body)
+    if (!findIt) {
+      // si no lo encuentra crea uno nuevo con la fecha de hoy y con el id del cliente
+      const saleDetails = {...body,client}
+      const newSaleModel= await Sales.create({saleDetails})
       res.send({data:newSaleModel})
       return 
     }
@@ -32,7 +39,7 @@ const getSale= async(req,res) => {
     const {date}= req.params
     console.log(date)
     const client=req.user._id
-    console.log(client) 
+    console.log(client,`soy cliente`) 
     const data=  await Sales.find({date, client})
     console.log(data)
     res.send({data})
@@ -55,80 +62,64 @@ const getSales= async(req,res) => {
  * la funcion updateOrCreate tambien va a 
  * restar en el stock los elmentos vendidos 
  */
-const updateOrCreateSale= async(req,res) => {
+const updateOrCreateSale = async (req, res) => {
   try {
-    const {body}=req
-    const {date}=body
-    const client=req.user._id
+    const { body } = req;
+    const { date } = body;
+    const client = req.user._id;
 
-    const find = await productStock.findOne( { client } )
-    console.log(body)
+    const find = await productStock.findOne({ client });
+    console.log(body);
 
+    const clientStock = find.productsInStock;
+    const sales = body.salesOfTheDay;
+    let error = false;
+    let errorMessage = ""
 
-    const clientStock= find.productsInStock
-    const sales= body.salesOfTheDay
-    let error = false
-    /**
-     *actualiza el stock en funcion de la lista de productos que recibe
-    */
     const updatedStock = clientStock.map((itemStock) => {
       const foundItem = sales.find((itemSale) => itemSale.name === itemStock.name);
       if (foundItem) {
         const updatedQuantity = itemStock.quantity - foundItem.quantity;
-        if(updatedQuantity< 0) {
-          error = true
-          return res
-          .status(400)
-          .send({ 
-            error:`no se pueden realizar la venta debido a que no se cuentan con suficientes articulos en stock del producto ${foundItem.name}`
-          });
+        if (updatedQuantity < 0) {
+          error = true;
+          errorMessage= `No se pueden realizar la venta debido a que no se cuentan con suficientes articulos en stock del producto ${foundItem.name}`;
+          return 
+          
         }
         return {
           ...itemStock,
-          quantity: updatedQuantity >= 0 ? updatedQuantity : 0
+          quantity: updatedQuantity >= 0 ? updatedQuantity : 0,
         };
-      } else {
-        return itemStock;
       }
+      return itemStock;
     });
-    if(error){
-      return;
+
+    if (error) {
+      return res.status(400).send({errorMessage});
     }
-    find.productsInStock= updatedStock
-    const updatedProductStock= await find.save()// guarda esos cambias en es modelo 
-  /**
-   * updated si existe ya un registro de ventas para el dia de hoy 
-   * lo actualiza metiendo los nuevos productos vendidos 
-   * no limpia repetidos 
-   */
+
+    find.productsInStock = updatedStock;
+    const updatedProductStock = await find.save();
+
     const updated = await Sales.findOneAndUpdate(
-      { client,date},
+      { client, date },
       { $push: { salesOfTheDay: { $each: body.salesOfTheDay } } },
       { new: true }
     );
-      /**
-       * si no existe un registro para la fecha proporcionada 
-       * crea uno nuevo 
-       */
-    if(updated===null){
-      const adaptingClientToString= String(client)
-      const addingClient= {...body,client:adaptingClientToString}
 
-      const create= await Sales.create(addingClient)
-      console.log(create)
-      res.send({data:create})
-      return 
+    if (updated === null) {
+      const adaptingClientToString = String(client);
+      const addingClient = { ...body, client: adaptingClientToString };
+      const create = await Sales.create(addingClient);
+      console.log(create);
+      return res.send({ data: create });
     }
 
-    /**
-     * si updated existe entonces envia el updated actualizado como respuesta 
-     */
-    res.send({ data: updated });
-
+    return res.send({ data: updated });
   } catch (error) {
     handlehttpErros(res, `Error en getproduct ${error}`, 400);
   }
-}
+};
 
 const deleteSale= async(req,res) => {
   try {

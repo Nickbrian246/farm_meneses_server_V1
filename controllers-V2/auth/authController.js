@@ -9,7 +9,7 @@ const {tokenSign} = require("../../utils/handleJwt")
 const registerUser= async (req, res)=> {
   try {
     const body= matchedData(req)
-   
+
     const passwordEncrypted= await encrypt(body.password)
     const createUser= {...body, password:passwordEncrypted}
     const dataUser= await Users.create(createUser)
@@ -22,8 +22,8 @@ const registerUser= async (req, res)=> {
     if(error.code===11000) {
     return handlehttpErros(res,"lo sentimos este correo ya existe es nuestra base de datos",400)
   }
-  console.log(error);
-    handlehttpErros(res,"error al registrar el usuario",400)
+
+    handlehttpErros(res,"error al registrar el usuario",400, error  )
   }
 }
 const loginUser= async (req, res)=> {
