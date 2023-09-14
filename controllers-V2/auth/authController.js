@@ -35,7 +35,7 @@ const loginUser= async (req, res)=> {
     const check= await compare(body.password, hashPassword)
   
     if(!check){
-      handlehttpErros(res,"contraseña invaliad",401)
+      res.status(400).send({errorMessage:"contraseña invalida"})
       return
     }
     const data= {
@@ -45,10 +45,10 @@ const loginUser= async (req, res)=> {
     console.log(data)
     res.send({data})
   } catch (error) {
-    if(error.code===11000) {
-    return handlehttpErros(res,"lo sentimos este correo ya existe es nuestra base de datos",400)
+    if(error) {
+    return handlehttpErros(res,"lo sentimos  contraseña invalida o correo no valido",400)
   }
-    handlehttpErros(res,"error al registrar el usuario",400)
+    handlehttpErros(res,"error al incio de sesion por favor verifique los datos",400)
   }
 }
 

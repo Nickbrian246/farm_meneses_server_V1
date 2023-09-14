@@ -21,6 +21,7 @@ app.use("/apiV2", require("./routes-V2/productsStockV2"))
 app.use("/apiV2", require("./routes-V2/auth"))
 app.use("/apiV2", require("./routes-V2/sales"))
 app.use("/apiV2", require("./routes-V2/reports"))
+app.use("/apiV2", require("./routes-V2/user"))
 
 app.listen(PORT,() => {
     console.log("conectado al puerto", PORT)
