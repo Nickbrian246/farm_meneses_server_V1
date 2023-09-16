@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for nb-pharmacy-server on 2023-09-16T00:34:34-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "nb-pharmacy-server"
+primary_region = "qro"
+
+[build]
+  builtin = "npm"
+  publish = "/app"
+
+[env]
+  NODE_ENV = "production"
+
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
