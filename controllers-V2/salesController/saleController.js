@@ -114,7 +114,6 @@ const updateOrCreateSale = async (req, res) => {
       console.log(create);
       return res.send({ data: create });
     }
-    console.log(updated);
     return res.send({ data: updated }).status(200)
   } catch (error) {
     handlehttpErros(res, `Error en getproduct ${error}`, 400);

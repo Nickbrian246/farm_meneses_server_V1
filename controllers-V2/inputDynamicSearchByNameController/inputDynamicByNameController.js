@@ -13,13 +13,13 @@ const getProductByName= async (req,res) => {
     const find = await productStock.findOne({client})
   
     const clientStock= find.productsInStock
-    const productFound = clientStock.filter((item)=> {
-      return item.name && item.name.includes(productName);
+    const groupOfCoincidences  = clientStock.filter((item)=> {
+      return item.name && item.name.toLowerCase().includes(productName);
     })
-    if (productFound.length===0){
+    if (groupOfCoincidences.length===0){
       return  res.status(404).json({ error: 'producto no encontrado' })
     }else {
-      res.send({data:clientStock})
+      res.send({data:groupOfCoincidences })
     }
   } catch (error) {
     handlehttpErros(res, `error en inputDinamico ${error}`, 404)
