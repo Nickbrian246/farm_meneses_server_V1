@@ -11,6 +11,7 @@ const getReports= async  (req, res)=> {
       const sales = await Sales.find({ date: item, client });
       findSales.push(sales);
     }
+
     res.send({data:findSales})
 
   } catch (error) {

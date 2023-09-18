@@ -41,7 +41,9 @@ const getSale= async(req,res) => {
     const client=req.user._id
     console.log(client,`soy cliente`) 
     const data=  await Sales.find({date, client})
-    console.log(data)
+    if(data.length ===0 ){
+      return handlehttpErros(res,`No hay ventas registradas para el dia o fecha seleccionada`,404)
+    }
     res.send({data})
     
   } catch (error) {
