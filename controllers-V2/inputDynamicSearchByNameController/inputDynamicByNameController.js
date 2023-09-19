@@ -8,10 +8,13 @@ const getProductByName= async (req,res) => {
     const {name} = req.params
     const client = req.user._id
     const productName = name
-  
 
-    const find = await productStock.findOne({client})
-  
+    const find = await productStock.findOne({client});
+    if(!find) {
+      handlehttpErros(res, `Ups!!!, paraece que aun no tienes productos en inventario para buscar,
+      te invitamos a agregar productos.`, 404);
+      return
+    }
     const clientStock= find.productsInStock
     const groupOfCoincidences  = clientStock.filter((item)=> {
       return item.name && item.name.toLowerCase().includes(productName);
